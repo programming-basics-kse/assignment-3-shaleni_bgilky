@@ -1,11 +1,14 @@
 from argparse import ArgumentParser
 import os
 from Medal import medal_results, medal_sort
+from Total import total_results, total_sort
 
 var = ArgumentParser(prog='Olympics_dataset_analyzer')
 var.add_argument('filepath', help ='Filepath to the data.tsv')
 var.add_argument('-m','--medals',nargs=2, help ='Input two arguments: country and year. Shows top 10 medalists and total of each kind of medals(gold,silver,bronze)')
+var.add_argument('-t','--total', type=int, metavar='year', help = 'Year of some olympic games')
 var.add_argument('-o','--output', metavar='filepath', help='Name of the file to save results to')
+
 
 args = var.parse_args()
 
@@ -38,10 +41,25 @@ if args.medals :
     print(medal)
 
 
+if args.total:
+
+    year = args.total
+    total = total_results(total_sort(file_tsv,year))
+
+    print(total)
+
+
 if o_file:
     with open(o_file,"w") as file:
+
         if args.medals :
-            file.write(medal)
+            file.write("medal function results:\n\n")
+            file.write(medal+"\n")
+
+        if args.total :
+            file.write("total function results:\n")
+            file.write(total+"\n")
+
 
 
 

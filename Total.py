@@ -1,6 +1,6 @@
 import csv
 
-def total_sort(filepath,year):
+def total_sort(filepath,year:int):
 
     countries = {}
 
@@ -10,7 +10,7 @@ def total_sort(filepath,year):
         for line in reader:
             line: dict
 
-            if line["Year"] == year :
+            if line["Year"] == f"{year}" :
 
                 if line["Team"] in countries : #different countries named USA-1 USA-2 should be counted as one?
                     gold = countries[line['Team']][0]
@@ -34,12 +34,20 @@ def total_sort(filepath,year):
     return countries
 
 
-# def total_results(countries:dict):
-#
-#     for country in countries.keys():
-#         print(country)
-#         print(countries[country])
-#
+def total_results(countries:dict):
 
-#total_results(total_sort("Olympic Athletes - raw.tsv","2016"))
+    if not countries:
+        result = "Are you sure there were olympic games that year?"
+    else:
+        result = ""
+        for country in countries.keys():
+            result += country + ": "
+            result += "gold - " + str(countries[country][0]) + ",  "
+            result += "silver - " + str(countries[country][1]) + ", "
+            result += "bronze - " + str(countries[country][2]) + "."
+            result += "\n"
+
+    return result
+
+#print(total_results(total_sort("Olympic Athletes - athlete_events.tsv","1900")))
 
