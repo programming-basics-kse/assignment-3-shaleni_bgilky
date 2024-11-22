@@ -41,9 +41,9 @@ def medal_results(medalists):
     else:
         result = ""
 
-        result += f"{len(medalists[0])} - gold\t"
-        result += f"{len(medalists[1])} - silver\t"
-        result += f"{len(medalists[2])} - bronze\t"
+        result += f"{len(medalists[0])} - gold\n"
+        result += f"{len(medalists[1])} - silver\n"
+        result += f"{len(medalists[2])} - bronze\n"
 
         all_medalists = []
         for i in medalists:
@@ -55,7 +55,7 @@ def medal_results(medalists):
                 result += all_medalists[count][i]
                 if i != 2:
                     result += " - "
-            result += "\t"
+            result += "\n"
             count += 1
 
         return  result
