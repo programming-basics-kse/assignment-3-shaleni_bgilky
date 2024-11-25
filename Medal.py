@@ -8,12 +8,19 @@ def medal_sort(filepath,country,year):
     bronze = []
     just_participants = []
 
+    if len(country) == 3 and country.isalpha():
+        country = country.upper()
+        key = "NOC"
+    else:
+        key = "Team"
+
     with open(filepath) as file :
         is_in_data = False
         reader = csv.DictReader(file,delimiter="\t")
         for line in reader :
             line: dict
-            if country in line["Team"] and line["Year"] == year: #line["Team"] == country
+            #if country == line[key] and line["Year"] == year: #line["Team"] == country
+            if country in line[key] and line["Year"] == year:
                 is_in_data = True
                 if line["Medal"] == "Gold":
                     gold.append([line["Name"],line["Event"]])
