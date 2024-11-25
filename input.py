@@ -1,8 +1,7 @@
 from argparse import ArgumentParser
 import os
-
 from Interactive import interactive, valid_choice
-#from Medal import medal_results, medal_sort
+from Medal import medal_sort, medal_print, medal_results, medal_make_csv
 from Overall import best_nd_worst, country_medals
 from Total import total_results, total_sort, total_print, total_make_csv
 from congrats import congrats
@@ -32,17 +31,17 @@ if o_file :
         raise Exception("Can't find file for output")
 
 
-# if args.medals :
-#
-#     country = args.medals[0]
-#     country = country[0].upper()
-#     year = args.medals[1]
-#
-#     if not year.isdecimal():
-#         raise Exception("After medal first argument is country and second is year. Year must be an integer.")
-#
-#     medal = medal_results(medal_sort(file_tsv,country,year))
-#     print(medal)
+if args.medals :
+
+    country = args.medals[0]
+    country = country[0].upper()
+    year = args.medals[1]
+
+    if not year.isdecimal():
+        raise Exception("After medal first argument is country and second is year. Year must be an integer.")
+
+    medals_dict = medal_sort(file_tsv,country,year)
+    medal_print(medals_dict)
 
 
 if args.total:
@@ -84,9 +83,11 @@ if args.interactive:
 if o_file:
     with open(o_file,"w") as file:
 
-        # if args.medals :
-        #     file.write("medal function results:\n\n")
-        #     file.write(medal+"\n")
+        if args.medals :
+            medal_results(medals_dict,o_file)
+            if medals_dict:
+                medal_make_csv(medals_dict)
+                print("There is an additional 'medal.csv' file for further use\nit will be rewritten with fresh info every usage")
 
         if args.total :
             total_results(total_dict,o_file)

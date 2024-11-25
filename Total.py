@@ -72,20 +72,3 @@ def total_results(countries: dict,filepath:str):
                            +"\n")
         file.write("\n")
 
-
-# def total_results(countries:dict):
-#
-#     if not countries:
-#         result = "Are you sure there were olympic games that year?"
-#     else:
-#         result = ""
-#         for country in countries.keys():
-#             result += country + ": "
-#             result += "gold - " + str(countries[country][0]) + ",  "
-#             result += "silver - " + str(countries[country][1]) + ", "
-#             result += "bronze - " + str(countries[country][2]) + "."
-#             result += "\n"
-#
-#     return result
-#
-# print(total_results(total_sort("Olympic Athletes - athlete_events.tsv","1900")))
