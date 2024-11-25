@@ -23,7 +23,7 @@ def country_medals(filepath, country: str, key):
                     country_medals[line[key]][1] += 1
                 elif line["Medal"] == "Bronze":
                     country_medals[line[key]][2] += 1
-                country_medals[line[key]][3]=sum(country_medals[line[key]][:-1])
+                country_medals[line[key]][3]=sum(country_medals[line[key]][:-1])#maybe you don't need to recount it every cycle
 
         if not country_exists:
             return False
@@ -36,46 +36,25 @@ def best_nd_worst(country: str, country_medals: dict[str:list[int]]):
     country = country.title()
     if not country_medals:
         return False
-    best_rezult, total_medals =0,0
-    least_rezult = 100000
+    best_result, total_medals =0,0
+    least_result = 100000
     least_score, best_score,  = {}, {}
 
     for games in country_medals: #year is str type
         #year = games.split()[0]
         total_medals += country_medals[games][3] # to find if there has been none medals at all
 
-        if country_medals[games][3]>best_rezult:
+        if country_medals[games][3]>best_result:
             best_score= {games : country_medals[games]}
-            best_rezult = best_score[games][3]
+            best_result = best_score[games][3]
 
-        if country_medals[games][3]<least_rezult:
+        if country_medals[games][3]<least_result:
             least_score={games : country_medals[games]}
-            least_rezult = least_score[games][3]
+            least_result = least_score[games][3]
 
     if not total_medals:
         return False
 
     return (best_score, least_score)
-
-if __name__=='__main__':
-
-    var = ArgumentParser('Olympics')
-    var.add_argument('filepath', help='Filepath to the data.tsv')
-    var.add_argument('-o', '--overall', nargs='*', help='Info on coutry\'s/team\'s medals for specific olympics.')
-    args = var.parse_args(['Olympic Athletes - athlete_events.tsv', '--overall', 'Ukraine'])
-    filepath = args.filepath
-
-    if args.overall:
-        for country in args.overall:
-            a = country_medals(filepath, country, 'Year')
-            print(f'Your dict is: {a} \n')
-            if not a:
-                print(f'Make sure you entered correct country/team, and it participated in the olympics.')
-                continue
-            b = best_nd_worst(country, a)
-            if not b:
-                print(f'{country} gained no medals.')
-            else:
-                print(b[0])
 
 
