@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 import os
 from Interactive import interactive, valid_choice
 from Medal import medal_sort, medal_print, medal_results, medal_make_csv
-from Overall import best_nd_worst, country_medals
+from Overall import overall_print, overall_result
 from Total import total_results, total_sort, total_print, total_make_csv
 from congrats import congrats
 
@@ -16,7 +16,7 @@ var.add_argument('-o','--output', metavar='filepath', help='Name of the file to 
 
 args = var.parse_args()
 
-file_tsv = args.filepath
+file_tsv = args.filepath.strip()
 
 if not os.path.exists(file_tsv):
     raise Exception("Can't find tsv file")
@@ -25,7 +25,7 @@ if "tsv" not in file_tsv:
     raise Exception("This file is not a tsv, if you file is a tsv it must have a '.tsv' ending")
 
 
-o_file = args.output
+o_file = args.output.strip()
 if o_file :
     if not os.path.exists(o_file) :
         raise Exception("Can't find file for output")
@@ -34,14 +34,14 @@ if o_file :
 if args.medals :
 
     country = args.medals[0]
-    country = country[0].upper()
+    country = country.title()
     year = args.medals[1]
 
     if not year.isdecimal():
         raise Exception("After medal first argument is country and second is year. Year must be an integer.")
 
     medals_dict = medal_sort(file_tsv,country,year)
-    medal_print(medals_dict)
+    medal_print(medals_dict,country, year)
 
 
 if args.total:
@@ -54,21 +54,7 @@ if args.total:
 
 
 if args.overall:
-    for country in args.overall:
-        a = country_medals(file_tsv, country, 'Year')
-        country = country.strip().title()
-        if not a:
-            print(f'{country} not in data. Make sure you entered correct country/team, and it participated in the olympics.')
-            continue
-
-        b = best_nd_worst(country, a)
-        if not b:
-            print(f'{country} gained no medals.')
-        else:
-            best_result = b[0]
-            for year in best_result:
-                print(f"{country}'s best result was in {year}")
-                print(f"{best_result[year][0]} - gold, {best_result[year][1]} - silver, {best_result[year][2]} - bronze")
+    overall_print(file_tsv,args.overall)
 
 
 if args.interactive:
@@ -81,19 +67,24 @@ if args.interactive:
 
 
 if o_file:
-    with open(o_file,"w") as file:
+    if args.medals :
+        medal_results(medals_dict,o_file)
+        if medals_dict:
+            medal_make_csv(medals_dict)
+            print("There is an additional 'medal.csv' file for further use")
 
-        if args.medals :
-            medal_results(medals_dict,o_file)
-            if medals_dict:
-                medal_make_csv(medals_dict)
-                print("There is an additional 'medal.csv' file for further use\nit will be rewritten with fresh info every usage")
+    if args.total :
+        total_results(total_dict,o_file)
+        if total_dict:
+            total_make_csv(total_dict)
+            print("There is an additional 'total.csv' file for further use")
 
-        if args.total :
-            total_results(total_dict,o_file)
-            if total_dict:
-                total_make_csv(total_dict)
-                print("There is an additional 'total.csv' file for further use\nit will be rewritten with fresh info every usage")
+    if args.overall :
+        overall_result(file_tsv,args.overall,o_file)
+
+    if args.total or args.overall:
+        print("will be rewritten with fresh info every usage")
+
 
 
 congrats()

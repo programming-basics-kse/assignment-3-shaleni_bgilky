@@ -36,13 +36,16 @@ def medal_sort(filepath,country,year):
         else:
             return is_in_data
 
-def medal_print(medalists:dict):
+def medal_print(medalists:dict,country,year):
     if type(medalists) == bool :
         if medalists:
             print("Unfortunately this country didn't win anything that year")
         else:
             print("Please, make sure you entered real country and there was in fact olympic games that year")
     else:
+        country = country.strip().title()
+        print(f"{country}'s result in {year}")
+
         print(f"{len(medalists["gold"])} - gold")
         print(f"{len(medalists["silver"])} - silver")
         print(f"{len(medalists["bronze"])} - bronze")
