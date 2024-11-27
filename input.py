@@ -25,7 +25,7 @@ if "tsv" not in file_tsv:
     raise Exception("This file is not a tsv, if you file is a tsv it must have a '.tsv' ending")
 
 
-o_file = args.output.strip()
+o_file = args.output
 if o_file :
     if not os.path.exists(o_file) :
         raise Exception("Can't find file for output")
