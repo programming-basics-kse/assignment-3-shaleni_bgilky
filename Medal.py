@@ -20,7 +20,7 @@ def medal_sort(filepath,country,year):
         for line in reader :
             line: dict
             #if country == line[key] and line["Year"] == year: #line["Team"] == country
-            if country in line[key] and line["Year"] == year:
+            if country == line[key] and line["Year"] == year:
                 is_in_data = True
                 if line["Medal"] == "Gold":
                     gold.append([line["Name"],line["Event"]])

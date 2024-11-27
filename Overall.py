@@ -28,7 +28,7 @@ def country_medals(filepath, country: str, key):
 
         for line in reader:
 
-            if country in line[filter]: # filter is 'Team' or 'NOC'
+            if country == line[filter]: # filter is 'Team' or 'NOC'
 
                 country_exists = True
                 if not line[key] in medals_dict: # line['Games'] contains Year and Season
@@ -81,7 +81,7 @@ def overall_print(filepath,countries):
                 f'{country} not in data. Make sure you entered correct country/team, and it participated in the olympics.')
             continue
 
-        b = best_nd_worst(country, a)
+        b = best_nd_worst(a)
         if not b:
             print(f'{country} gained no medals.')
         else:
@@ -102,7 +102,7 @@ def overall_result(filepath,countries,output_filepath):
                 file.write(f'{country} not in data. Make sure you entered correct country/team, and it participated in the olympics.\n')
                 continue
 
-            b = best_nd_worst(country, a)
+            b = best_nd_worst(a)
             if not b:
                 file.write(f'{country} gained no medals.\n')
             else:
