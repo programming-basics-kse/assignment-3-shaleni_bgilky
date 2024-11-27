@@ -8,12 +8,19 @@ def medal_sort(filepath,country,year):
     bronze = []
     just_participants = []
 
+    if len(country) == 3 and country.isalpha():
+        country = country.upper()
+        key = "NOC"
+    else:
+        key = "Team"
+
     with open(filepath) as file :
         is_in_data = False
         reader = csv.DictReader(file,delimiter="\t")
         for line in reader :
             line: dict
-            if country in line["Team"] and line["Year"] == year: #line["Team"] == country
+            #if country == line[key] and line["Year"] == year: #line["Team"] == country
+            if country in line[key] and line["Year"] == year:
                 is_in_data = True
                 if line["Medal"] == "Gold":
                     gold.append([line["Name"],line["Event"]])
@@ -29,13 +36,16 @@ def medal_sort(filepath,country,year):
         else:
             return is_in_data
 
-def medal_print(medalists:dict):
+def medal_print(medalists:dict,country,year):
     if type(medalists) == bool :
         if medalists:
             print("Unfortunately this country didn't win anything that year")
         else:
             print("Please, make sure you entered real country and there was in fact olympic games that year")
     else:
+        country = country.strip().title()
+        print(f"{country}'s result in {year}")
+
         print(f"{len(medalists["gold"])} - gold")
         print(f"{len(medalists["silver"])} - silver")
         print(f"{len(medalists["bronze"])} - bronze")

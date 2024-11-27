@@ -1,9 +1,11 @@
 import csv
 
+
 def is_noc(country : str): # to check if user entered NOC
     if len(country)!=3 or not country.isalpha():
         return False
     return True
+
 
 def country_medals(filepath, country: str, key):
     # returns a dictionary with keys all games/years of the country
@@ -45,6 +47,7 @@ def country_medals(filepath, country: str, key):
 
         return medals_dict
 
+
 def best_nd_worst(medals_dict): # returns two dict - best and worst results
     if not medals_dict:
         return False
@@ -69,3 +72,43 @@ def best_nd_worst(medals_dict): # returns two dict - best and worst results
     return (best_score, least_score)
 
 
+def overall_print(filepath,countries):
+    for country in countries:
+        a = country_medals(filepath, country, 'Year')
+        country = country.strip().title()
+        if not a:
+            print(
+                f'{country} not in data. Make sure you entered correct country/team, and it participated in the olympics.')
+            continue
+
+        b = best_nd_worst(country, a)
+        if not b:
+            print(f'{country} gained no medals.')
+        else:
+            best_result = b[0]
+            for year in best_result:
+                print(f"{country}'s best result was in {year}")
+                print(
+                    f"{best_result[year][0]} - gold, {best_result[year][1]} - silver, {best_result[year][2]} - bronze")
+
+
+def overall_result(filepath,countries,output_filepath):
+    with open(output_filepath,"at") as file:
+        file.write("Overall function results: \n")
+        for country in countries:
+            a = country_medals(filepath, country, 'Year')
+            country = country.strip().title()
+            if not a:
+                file.write(f'{country} not in data. Make sure you entered correct country/team, and it participated in the olympics.\n')
+                continue
+
+            b = best_nd_worst(country, a)
+            if not b:
+                file.write(f'{country} gained no medals.\n')
+            else:
+                best_result = b[0]
+                for year in best_result:
+                    file.write(f"{country}'s best result was in {year}\n")
+                    file.write(f"{best_result[year][0]} - gold, {best_result[year][1]} - silver, {best_result[year][2]} - bronze\n")
+
+        file.write("\n")
