@@ -82,7 +82,7 @@ if o_file:
     if args.overall :
         overall_result(file_tsv,args.overall,o_file)
 
-    if args.total or args.overall:
+    if args.total or args.medals:
         print("will be rewritten with fresh info every usage")
 
 
