@@ -1,59 +1,70 @@
 import csv
-from argparse import ArgumentParser
+
+def is_noc(country : str): # to check if user entered NOC
+    if len(country)!=3 or not country.isalpha():
+        return False
+    return True
+
 def country_medals(filepath, country: str, key):
-    country = country.title().strip() #makes 1 letter capital and others lower, skips symbols
+    # returns a dictionary with keys all games/years of the country
+    # values are medals list with sum as 4ht element
+    # medals =  sth like {'1998 Summer':[2, 5, 2, 9], '2016 Winter': [2, 6, 4, 12], ...}
+
     country_exists = False
+    country = country.strip()
+
+    if is_noc(country): # in case the user entered NOC as country
+        country = country.upper() # NOC to upper
+        filter = 'NOC'
+    else:
+        country = country.title()
+        filter = 'Team' # just filter by country
 
     with open(f"{filepath}") as file:
         reader = csv.DictReader(file, delimiter="\t")
-        country_medals : dict[str:list[int]]
-        country_medals={}
+        medals_dict={}
 
         for line in reader:
 
-            if line['Team']==country:
+            if country in line[filter]: # filter is 'Team' or 'NOC'
 
                 country_exists = True
-                if not line[key] in country_medals: # line['GAmes'] contains Year and Season
-                    country_medals[line[key]]= [0] * 4
+                if not line[key] in medals_dict: # line['Games'] contains Year and Season
+                    medals_dict[line[key]]= [0] * 4
 
                 if line["Medal"] == "Gold":
-                    country_medals[line[key]][0] += 1
+                    medals_dict[line[key]][0] += 1
                 elif line["Medal"] == "Silver":
-                    country_medals[line[key]][1] += 1
+                    medals_dict[line[key]][1] += 1
                 elif line["Medal"] == "Bronze":
-                    country_medals[line[key]][2] += 1
-                country_medals[line[key]][3]=sum(country_medals[line[key]][:-1])#maybe you don't need to recount it every cycle
+                    medals_dict[line[key]][2] += 1
+                medals_dict[line[key]][3]=sum(medals_dict[line[key]][:-1])#maybe you don't need to recount it every cycle
 
         if not country_exists:
             return False
 
-        #sort country_medals by year
-        #country_medals_sort = dict(sorted(country_medals.items(), key=lambda x: int(x[0]), reverse=True))
-        return country_medals #dict
+        return medals_dict
 
-def best_nd_worst(country: str, country_medals: dict[str:list[int]]):
-    country = country.title()
-    if not country_medals:
+def best_nd_worst(medals_dict): # returns two dict - best and worst results
+    if not medals_dict:
         return False
     best_result, total_medals =0,0
     least_result = 100000
     least_score, best_score,  = {}, {}
 
-    for games in country_medals: #year is str type
-        #year = games.split()[0]
-        total_medals += country_medals[games][3] # to find if there has been none medals at all
+    for games in medals_dict:
+        total_medals += medals_dict[games][3] # to find if there has been none medals at all
 
-        if country_medals[games][3]>best_result:
-            best_score= {games : country_medals[games]}
-            best_result = best_score[games][3]
+        if medals_dict[games][3]>best_result:
+            best_score= {games : medals_dict[games]} #e.g. {'2012 Winter' : [3, 2, 5, 10]}
+            best_result = best_score[games][3] # the total amount of medals for this result
 
-        if country_medals[games][3]<least_result:
-            least_score={games : country_medals[games]}
+        if medals_dict[games][3]<least_result:
+            least_score={games : medals_dict[games]}
             least_result = least_score[games][3]
 
     if not total_medals:
-        return False
+        return False # no medals
 
     return (best_score, least_score)
 

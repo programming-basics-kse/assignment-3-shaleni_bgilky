@@ -1,5 +1,4 @@
 import csv
-from argparse import ArgumentParser
 from Overall import country_medals
 from Overall import best_nd_worst
 from math import ceil
@@ -40,7 +39,7 @@ def find_first_games(games_dict):
     return first_games
 
 def interactive(filepath, country):
-    medals = country_medals(filepath, country, 'Games') # dict off all games of the country with years keys, values are medals numbers
+    medals = country_medals(filepath, country, 'Games')
     if medals:
         country = country.title().strip()
 
@@ -48,7 +47,7 @@ def interactive(filepath, country):
 
         venue = find_venue(filepath,first_games)
 
-        extremes = best_nd_worst(country, medals)# best and worst results dictionaries by amounts of medals in tuple
+        extremes = best_nd_worst(medals)  # best and worst results dictionaries by amounts of medals in tuple
         '''don't print year if there are same results???'''
         best_games = [i for i in extremes[0]][0]# get the games
         best_res = extremes[0][best_games][3] # get the total result
